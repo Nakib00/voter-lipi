@@ -142,7 +142,7 @@ const Home = () => {
           gap: "6px",
         }}
       >
-        <span style={{ fontSize: "1.2em" }}>🛡</span> DIGITAL BANGLADESH
+        <span style={{ fontSize: "1.2em" }}>🛡</span> Napver
       </p>
     </div>
   );
