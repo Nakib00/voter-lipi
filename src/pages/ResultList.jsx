@@ -4,195 +4,219 @@ import { useVoter } from "../context/VoterContext";
 import {
   ChevronLeft,
   User,
-  ShieldCheck,
   ChevronRight,
   Search,
+  SearchX,
+  Home,
 } from "lucide-react";
 
 const ResultList = () => {
   const { searchResults } = useVoter();
   const navigate = useNavigate();
 
+  // Empty State
   if (!searchResults || searchResults.length === 0) {
     return (
-      <div
-        className="container"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <p>কোন ফলাফল নেই।</p>
+      <div className="container">
+        <div className="page-header fade-in">
+          <button className="btn-icon" onClick={() => navigate("/")}>
+            <ChevronLeft size={24} />
+          </button>
+          <h2 className="page-title">অনুসন্ধানের ফলাফল</h2>
+          <div style={{ width: 44 }} />
+        </div>
+
+        <div className="empty-state slide-up">
+          <div className="empty-state-icon">
+            <SearchX size={40} />
+          </div>
+          <h3 className="empty-state-title">কোন ফলাফল নেই</h3>
+          <p className="empty-state-text">
+            দুঃখিত, আপনার অনুসন্ধানে কোন ভোটার খুঁজে পাওয়া যায়নি। অনুগ্রহ করে সঠিক তথ্য দিয়ে আবার চেষ্টা করুন।
+          </p>
+          <button
+            onClick={() => navigate("/")}
+            className="btn-primary"
+            style={{ marginTop: "24px", maxWidth: "200px" }}
+          >
+            <Home size={20} />
+            হোমে ফিরুন
+          </button>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container">
+    <div className="container safe-bottom">
       {/* Header */}
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginBottom: "24px",
-        }}
-      >
-        <button
-          onClick={() => navigate("/")}
-          style={{ padding: "8px", background: "#f3f4f6", borderRadius: "50%" }}
-        >
+      <div className="page-header fade-in">
+        <button className="btn-icon" onClick={() => navigate("/")}>
           <ChevronLeft size={24} />
         </button>
-        <h2 style={{ fontSize: "1.2rem", fontWeight: 700 }}>
-          অনুসন্ধানের ফলাফল
-        </h2>
-        <div
-          style={{
-            width: 40,
-            height: 40,
-            background: "#dcfce7",
-            borderRadius: "50%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#3ade38",
-          }}
-        >
-          <ShieldCheck size={20} />
-        </div>
+        <h2 className="page-title">অনুসন্ধানের ফলাফল</h2>
+        <div style={{ width: 44 }} />
       </div>
 
+      {/* Results Count Badge */}
       <div
+        className="fade-in"
         style={{
-          color: "#3ade38",
           marginBottom: "20px",
           display: "flex",
           alignItems: "center",
-          gap: "8px",
+          gap: "10px",
         }}
       >
-        <Search size={16} />
-        <span>{searchResults.length}টি ফলাফল পাওয়া গেছে</span>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            background: "#dcfce7",
+            padding: "8px 16px",
+            borderRadius: "100px",
+            color: "#166534",
+            fontWeight: 600,
+            fontSize: "0.9rem",
+          }}
+        >
+          <Search size={16} />
+          <span>{searchResults.length}টি ফলাফল পাওয়া গেছে</span>
+        </div>
       </div>
 
+      {/* Results List */}
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          gap: "16px",
-          paddingBottom: "80px",
+          gap: "14px",
         }}
       >
         {searchResults.map((voter, index) => (
           <div
-            key={index}
-            className="card"
+            key={voter["ভোটার নং"] || index}
+            className="card card-interactive stagger-item"
+            onClick={() => navigate(`/details/${voter["ভোটার নং"]}`)}
             style={{
-              padding: "20px",
+              padding: "18px",
               margin: 0,
-              boxShadow: "0 2px 10px rgba(0,0,0,0.03)",
+              cursor: "pointer",
             }}
           >
+            {/* Voter Info Header */}
             <div
               style={{
                 display: "flex",
                 alignItems: "flex-start",
-                gap: "16px",
-                marginBottom: "20px",
+                gap: "14px",
+                marginBottom: "16px",
               }}
             >
               <div
                 style={{
-                  width: 50,
-                  height: 50,
-                  background: "#f1f5f9",
+                  width: 52,
+                  height: 52,
+                  background: "linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)",
                   borderRadius: "50%",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: "#94a3b8",
+                  color: "#64748b",
+                  flexShrink: 0,
                 }}
               >
-                <User size={28} />
+                <User size={26} />
               </div>
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <h3
                   style={{
-                    fontSize: "1.2rem",
+                    fontSize: "1.15rem",
                     marginBottom: "4px",
                     fontWeight: 700,
+                    color: "#1f2937",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
                   }}
                 >
                   {voter["নাম"]}
                 </h3>
-                <p style={{ color: "#64748b", fontSize: "0.9rem" }}>
+                <p style={{ color: "#6b7280", fontSize: "0.9rem" }}>
                   পিতা: {voter["পিতা"]}
                 </p>
               </div>
+              <ChevronRight
+                size={22}
+                style={{ color: "#9ca3af", flexShrink: 0 }}
+              />
             </div>
 
+            {/* Voter Details Row */}
             <div
               style={{
                 display: "flex",
                 justifyContent: "space-between",
-                fontSize: "0.95rem",
-                marginBottom: "20px",
+                fontSize: "0.9rem",
                 background: "#f8fafc",
-                padding: "12px",
-                borderRadius: "8px",
+                padding: "12px 14px",
+                borderRadius: "10px",
               }}
             >
               <div>
-                <div style={{ color: "#94a3b8", fontSize: "0.8rem" }}>
+                <div
+                  style={{
+                    color: "#9ca3af",
+                    fontSize: "0.75rem",
+                    marginBottom: "2px",
+                    fontWeight: 500,
+                  }}
+                >
                   জন্ম তারিখ
                 </div>
-                <div style={{ fontWeight: 600 }}>{voter["জন্ম তারিখ"]}</div>
+                <div style={{ fontWeight: 600, color: "#374151" }}>
+                  {voter["জন্ম তারিখ"]}
+                </div>
               </div>
               <div style={{ textAlign: "right" }}>
-                <div style={{ color: "#94a3b8", fontSize: "0.8rem" }}>
+                <div
+                  style={{
+                    color: "#9ca3af",
+                    fontSize: "0.75rem",
+                    marginBottom: "2px",
+                    fontWeight: 500,
+                  }}
+                >
                   ভোটার নং
                 </div>
-                <div style={{ fontWeight: 600 }}>
-                  **** {voter["ভোটার নং"].slice(-4)}
+                <div
+                  style={{
+                    fontWeight: 600,
+                    color: "#374151",
+                    fontFamily: "monospace",
+                  }}
+                >
+                  •••• {voter["ভোটার নং"].slice(-4)}
                 </div>
               </div>
             </div>
-
-            <button
-              onClick={() => navigate(`/details/${voter["ভোটার নং"]}`)}
-              className="btn-primary"
-              style={{
-                borderRadius: "8px",
-                padding: "10px",
-                fontSize: "0.95rem",
-              }}
-            >
-              বিস্তারিত দেখুন <ChevronRight size={18} />
-            </button>
           </div>
         ))}
       </div>
 
-      {/* Floating Bottom Nav Placeholder inside Container */}
-      <div
-        style={{
-          position: "fixed",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          background: "white",
-          padding: "16px",
-          borderTop: "1px solid #eee",
-          display: "flex",
-          justifyContent: "center",
-          gap: "8px",
-          color: "#94a3b8",
-        }}
-      >
-        <span>আরো লোড করুন</span>{" "}
-        <ChevronLeft size={16} style={{ transform: "rotate(-90deg)" }} />
+      {/* Bottom Bar with New Search Button */}
+      <div className="bottom-bar">
+        <div className="bottom-bar-content">
+          <button
+            onClick={() => navigate("/")}
+            className="btn-secondary"
+            style={{ flex: 1 }}
+          >
+            <Search size={20} />
+            নতুন অনুসন্ধান
+          </button>
+        </div>
       </div>
     </div>
   );
